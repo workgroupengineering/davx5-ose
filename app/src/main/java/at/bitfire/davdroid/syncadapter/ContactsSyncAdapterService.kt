@@ -16,6 +16,8 @@ import android.content.SyncResult
 import android.os.Bundle
 import android.provider.ContactsContract
 import at.bitfire.davdroid.log.Logger
+import at.bitfire.davdroid.model.AppDatabase
+import at.bitfire.davdroid.model.CollectionSyncInfo
 import at.bitfire.davdroid.resource.LocalAddressBook
 import at.bitfire.davdroid.settings.AccountSettings
 import java.util.logging.Level
@@ -67,7 +69,19 @@ class ContactsSyncAdapterService: SyncAdapterService() {
                 ContactsSyncManager(context, account, accountSettings, extras, authority, syncResult, provider, addressBook).use {
                     it.performSync()
                 }
-                Logger.log.info("Sync-Result for address book  #${addressBook.url}: ${syncResult.stats.numEntries} processed, ${syncResult.stats.numDeletes} deleted, ${syncResult.stats.numInserts} inserted, ${syncResult.stats.numUpdates} updated")
+
+                //TODO: Check why stats are doubled
+                //Logger.log.info("Sync-Result for address book  #${addressBook.url}: ${syncResult.stats.numEntries} processed, ${syncResult.stats.numDeletes} deleted, ${syncResult.stats.numInserts} inserted, ${syncResult.stats.numUpdates} updated")
+
+                //Store Sync-Info for later display
+                val db = AppDatabase.getInstance(context)
+                val collection = addressBook.url?.let { url -> db.collectionDao().getByUrl(url) }
+                if (collection != null) {
+                    db.collectionSyncInfoDao().insertOrReplace(
+                            CollectionSyncInfo(0, collection!!.id, authority, System.currentTimeMillis(), syncResult.stats.numDeletes + syncResult.stats.numInserts + syncResult.stats.numUpdates)
+                    )
+                }
+
 
             } catch(e: Exception) {
                 Logger.log.log(Level.SEVERE, "Couldn't sync contacts", e)

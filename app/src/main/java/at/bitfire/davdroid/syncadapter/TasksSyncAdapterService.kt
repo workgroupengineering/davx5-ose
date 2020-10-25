@@ -22,6 +22,7 @@ import at.bitfire.davdroid.R
 import at.bitfire.davdroid.log.Logger
 import at.bitfire.davdroid.model.AppDatabase
 import at.bitfire.davdroid.model.Collection
+import at.bitfire.davdroid.model.CollectionSyncInfo
 import at.bitfire.davdroid.model.Service
 import at.bitfire.davdroid.resource.LocalTaskList
 import at.bitfire.davdroid.settings.AccountSettings
@@ -72,6 +73,19 @@ open class TasksSyncAdapterService: SyncAdapterService() {
                     Logger.log.info("Synchronizing task list #${taskList.id} [${taskList.syncId}]")
                     TasksSyncManager(context, account, accountSettings, extras, authority, syncResult, taskList).use {
                         it.performSync()
+
+                        //TODO: Check why stats are doubled
+                        //Logger.log.info("Sync-Result for calendar #${taskList.id}, URL: ${taskList.syncId}: ${it.syncResult.stats.numEntries} processed, ${it.syncResult.stats.numDeletes} deleted, ${it.syncResult.stats.numInserts} inserted, ${it.syncResult.stats.numUpdates} updated")
+
+                        //Store Sync-Info for later display
+                        val db = AppDatabase.getInstance(context)
+                        val collection = taskList.syncId?.let { url -> db.collectionDao().getByUrl(url) }
+                        if (collection != null) {
+                            db.collectionSyncInfoDao().insertOrReplace(
+                                    CollectionSyncInfo(0, collection!!.id, authority, System.currentTimeMillis(), it.syncResult.stats.numDeletes + it.syncResult.stats.numInserts + it.syncResult.stats.numUpdates)
+                            )
+                        }
+
                     }
                 }
             } catch (e: TaskProvider.ProviderTooOldException) {
