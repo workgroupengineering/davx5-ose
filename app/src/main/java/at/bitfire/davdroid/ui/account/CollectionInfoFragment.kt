@@ -18,14 +18,18 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import at.bitfire.davdroid.databinding.CollectionPropertiesBinding
 import at.bitfire.davdroid.model.AppDatabase
 import at.bitfire.davdroid.model.Collection
+import at.bitfire.davdroid.model.CollectionSyncInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
-class CollectionInfoFragment: DialogFragment() {
+
+class CollectionInfoFragment : DialogFragment() {
 
     companion object {
 
@@ -58,9 +62,22 @@ class CollectionInfoFragment: DialogFragment() {
 
     class Model(
             application: Application
-    ): AndroidViewModel(application) {
+    ) : AndroidViewModel(application) {
 
         var collection = MutableLiveData<Collection>()
+        var collectionSyncInfo = MutableLiveData<CollectionSyncInfo>()
+
+        var lastsync = Transformations.map(collectionSyncInfo) {
+            if (it?.lastSyncTimestamp == null)
+                return@map "-"
+            else
+                return@map it.lastSyncTimestamp?.let { ts ->
+                    return@let Date(ts).toString()
+                    //TODO Handle for multiple SyncAuthorities!
+
+                }
+        }
+
 
         private var initialized = false
 
@@ -73,9 +90,13 @@ class CollectionInfoFragment: DialogFragment() {
             viewModelScope.launch(Dispatchers.IO) {
                 val db = AppDatabase.getInstance(getApplication())
                 collection.postValue(db.collectionDao().get(collectionId))
+                collectionSyncInfo.postValue(db.collectionSyncInfoDao().getLastSyncTimestampByCollectionAndAuthority(collectionId))
             }
         }
 
+
+
     }
+
 
 }

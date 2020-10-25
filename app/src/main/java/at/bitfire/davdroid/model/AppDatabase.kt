@@ -18,14 +18,18 @@ import java.io.Writer
 @Database(entities = [
     Service::class,
     HomeSet::class,
-    Collection::class
-], exportSchema = true, version = 7)
+    Collection::class,
+    CollectionSyncInfo::class
+], exportSchema = true, version = 8)
 @TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun serviceDao(): ServiceDao
     abstract fun homeSetDao(): HomeSetDao
     abstract fun collectionDao(): CollectionDao
+    abstract fun collectionSyncInfoDao(): CollectionSyncInfoDao
+
+
 
     companion object: AndroidSingleton<AppDatabase>() {
 
@@ -37,7 +41,8 @@ abstract class AppDatabase: RoomDatabase() {
                             Migration3_4,
                             Migration4_5,
                             Migration5_6,
-                            Migration6_7
+                            Migration6_7,
+                            Migration7_8
                     )
                     .fallbackToDestructiveMigration()   // as a last fallback, recreate database instead of crashing
                     .build()
@@ -71,6 +76,13 @@ abstract class AppDatabase: RoomDatabase() {
 
 
     // migrations
+
+
+    object Migration7_8: Migration(7, 8) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            // No actual migration necessary
+        }
+    }
 
     object Migration6_7: Migration(6, 7) {
         override fun migrate(db: SupportSQLiteDatabase) {

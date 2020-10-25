@@ -17,12 +17,14 @@ import android.provider.CalendarContract
 import at.bitfire.davdroid.log.Logger
 import at.bitfire.davdroid.model.AppDatabase
 import at.bitfire.davdroid.model.Collection
+import at.bitfire.davdroid.model.CollectionSyncInfo
 import at.bitfire.davdroid.model.Service
 import at.bitfire.davdroid.resource.LocalCalendar
 import at.bitfire.davdroid.settings.AccountSettings
 import at.bitfire.ical4android.AndroidCalendar
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import java.time.LocalDateTime
 import java.util.logging.Level
 
 class CalendarsSyncAdapterService: SyncAdapterService() {
@@ -60,17 +62,31 @@ class CalendarsSyncAdapterService: SyncAdapterService() {
                     Logger.log.info("Synchronizing calendar #${calendar.id}, URL: ${calendar.name}")
                     CalendarSyncManager(context, account, accountSettings, extras, authority, syncResult, calendar).use {
                         it.performSync()
+                        Logger.log.info("Sync-Result for calendar #${calendar.id}, URL: ${calendar.name}: ${it.syncResult.stats.numEntries} processed, ${it.syncResult.stats.numDeletes} deleted, ${it.syncResult.stats.numInserts} inserted, ${it.syncResult.stats.numUpdates} updated")
+
+                        //Store Sync-Info for later display
+                        val db = AppDatabase.getInstance(context)
+                        val collection = calendar.name?.let { url -> db.collectionDao().getByUrl(url) }
+                        if (collection != null) {
+                            db.collectionSyncInfoDao().insertOrReplace(
+                                    CollectionSyncInfo(0, collection!!.id, authority, System.currentTimeMillis(), it.syncResult.stats.numDeletes + it.syncResult.stats.numInserts + it.syncResult.stats.numUpdates)
+                            )
+                        }
+
+
                     }
                 }
             } catch(e: Exception) {
                 Logger.log.log(Level.SEVERE, "Couldn't sync calendars", e)
             }
             Logger.log.info("Calendar sync complete")
+
         }
 
         private fun updateLocalCalendars(provider: ContentProviderClient, account: Account, settings: AccountSettings) {
             val db = AppDatabase.getInstance(context)
             val service = db.serviceDao().getByAccountAndType(account.name, Service.TYPE_CALDAV)
+
 
             val remoteCalendars = mutableMapOf<HttpUrl, Collection>()
             if (service != null)
@@ -101,6 +117,7 @@ class CalendarsSyncAdapterService: SyncAdapterService() {
                 Logger.log.log(Level.INFO, "Adding local calendar", info)
                 LocalCalendar.create(account, provider, info)
             }
+
         }
 
     }

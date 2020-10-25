@@ -34,6 +34,9 @@ interface CollectionDao: SyncableDao<Collection> {
     @Query("SELECT * FROM collection WHERE serviceId=:serviceId AND supportsVTODO AND sync ORDER BY displayName, url")
     fun getSyncTaskLists(serviceId: Long): List<Collection>
 
+    @Query("SELECT * FROM collection WHERE url=:url")
+    fun getByUrl(url: String): Collection?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrReplace(collection: Collection)
 

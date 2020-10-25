@@ -67,6 +67,8 @@ class ContactsSyncAdapterService: SyncAdapterService() {
                 ContactsSyncManager(context, account, accountSettings, extras, authority, syncResult, provider, addressBook).use {
                     it.performSync()
                 }
+                Logger.log.info("Sync-Result for address book  #${addressBook.url}: ${syncResult.stats.numEntries} processed, ${syncResult.stats.numDeletes} deleted, ${syncResult.stats.numInserts} inserted, ${syncResult.stats.numUpdates} updated")
+
             } catch(e: Exception) {
                 Logger.log.log(Level.SEVERE, "Couldn't sync contacts", e)
             }
