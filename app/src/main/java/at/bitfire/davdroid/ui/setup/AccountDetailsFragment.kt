@@ -38,6 +38,7 @@ import at.bitfire.davdroid.resource.TaskUtils
 import at.bitfire.davdroid.settings.AccountSettings
 import at.bitfire.davdroid.settings.SettingsManager
 import at.bitfire.davdroid.syncadapter.AccountUtils
+import at.bitfire.davdroid.ui.account.AccountActivity
 import at.bitfire.vcard4android.GroupMethod
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
@@ -101,9 +102,15 @@ class AccountDetailsFragment : Fragment() {
                         config,
                         GroupMethod.valueOf(groupMethodName)
                 ).observe(viewLifecycleOwner, Observer<Boolean> { success ->
-                    if (success)
+                    if (success) {
+                        // close Create account activity
                         requireActivity().finish()
-                    else {
+                        // open Account activity for created account
+                        val intent = Intent(requireActivity(), AccountActivity::class.java)
+                        val account = Account(name, getString(R.string.account_type))
+                        intent.putExtra(AccountActivity.EXTRA_ACCOUNT, account)
+                        startActivity(intent)
+                    } else {
                         Snackbar.make(requireActivity().findViewById(android.R.id.content), R.string.login_account_not_created, Snackbar.LENGTH_LONG).show()
 
                         v.createAccountProgress.visibility = View.GONE
@@ -200,7 +207,8 @@ class AccountDetailsFragment : Fragment() {
                             accountSettings.setSyncInterval(taskProvider.authority, Constants.DEFAULT_SYNC_INTERVAL)
                             // further changes will be handled by TasksWatcher on app start or when tasks app is (un)installed
                         }
-                    }
+                    } else
+                        ContentResolver.setIsSyncable(account, CalendarContract.AUTHORITY, 0)
 
                 } catch(e: InvalidAccountException) {
                     Logger.log.log(Level.SEVERE, "Couldn't access account settings", e)
