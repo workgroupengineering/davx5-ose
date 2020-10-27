@@ -24,6 +24,7 @@ import at.bitfire.davdroid.databinding.CollectionPropertiesBinding
 import at.bitfire.davdroid.model.AppDatabase
 import at.bitfire.davdroid.model.Collection
 import at.bitfire.davdroid.model.CollectionSyncInfo
+import at.bitfire.davdroid.resource.TaskUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
@@ -65,17 +66,26 @@ class CollectionInfoFragment : DialogFragment() {
     ) : AndroidViewModel(application) {
 
         var collection = MutableLiveData<Collection>()
-        var collectionSyncInfo = MutableLiveData<CollectionSyncInfo>()
+        var collectionSyncInfo = MutableLiveData<List<CollectionSyncInfo>>()
+
 
         var lastsync = Transformations.map(collectionSyncInfo) {
-            if (it?.lastSyncTimestamp == null)
+            if (it.isNullOrEmpty())
                 return@map "-"
-            else
-                return@map it.lastSyncTimestamp?.let { ts ->
-                    return@let Date(ts).toString()
-                    //TODO Handle for multiple SyncAuthorities!
 
-                }
+            it.forEach() { lastSyncAuthority ->
+
+                /*
+                if(lastSyncAuthority.syncAuthority != "com.android.calendar" || lastSyncAuthority.syncAuthority != "com.android.contacts" || lastSyncAuthority.syncAuthority != TaskUtils.currentProvider(application)?.authority)
+                    return@forEach
+*/
+                if (lastSyncAuthority!!.lastSyncTimestamp == null)
+                    return@map "Authority: ${lastSyncAuthority.syncAuthority} \n -"
+                else
+                    return@map "Authority: ${lastSyncAuthority.syncAuthority} \n ${Date(lastSyncAuthority.lastSyncTimestamp!!)}\n"
+
+            }
+
         }
 
 
@@ -90,13 +100,9 @@ class CollectionInfoFragment : DialogFragment() {
             viewModelScope.launch(Dispatchers.IO) {
                 val db = AppDatabase.getInstance(getApplication())
                 collection.postValue(db.collectionDao().get(collectionId))
-                collectionSyncInfo.postValue(db.collectionSyncInfoDao().getLastSyncTimestampByCollectionAndAuthority(collectionId))
+                collectionSyncInfo.postValue(db.collectionSyncInfoDao().getLastSyncTimestampByCollection(collectionId))
             }
         }
 
-
-
     }
-
-
 }

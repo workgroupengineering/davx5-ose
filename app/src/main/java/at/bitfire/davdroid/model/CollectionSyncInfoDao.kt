@@ -9,8 +9,8 @@ import androidx.room.Query
 @Dao
 interface CollectionSyncInfoDao {
 
-    @Query("SELECT * FROM collectionsyncinfo WHERE collectionId=:collectionId  LIMIT 1")
-    fun getLastSyncTimestampByCollectionAndAuthority(collectionId: Long): CollectionSyncInfo
+    @Query("SELECT * FROM collectionsyncinfo WHERE collectionId=:collectionId")
+    fun getLastSyncTimestampByCollection(collectionId: Long): List<CollectionSyncInfo>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrReplace(collectionSyncInfo: CollectionSyncInfo)
