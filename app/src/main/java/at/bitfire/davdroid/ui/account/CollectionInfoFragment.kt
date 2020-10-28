@@ -73,19 +73,16 @@ class CollectionInfoFragment : DialogFragment() {
             if (it.isNullOrEmpty())
                 return@map "-"
 
-            it.forEach() { lastSyncAuthority ->
+            var lastSyncInfoString = ""
 
-                /*
-                if(lastSyncAuthority.syncAuthority != "com.android.calendar" || lastSyncAuthority.syncAuthority != "com.android.contacts" || lastSyncAuthority.syncAuthority != TaskUtils.currentProvider(application)?.authority)
-                    return@forEach
-*/
-                if (lastSyncAuthority!!.lastSyncTimestamp == null)
-                    return@map "Authority: ${lastSyncAuthority.syncAuthority} \n -"
-                else
-                    return@map "Authority: ${lastSyncAuthority.syncAuthority} \n ${Date(lastSyncAuthority.lastSyncTimestamp!!)}\n"
+            it.forEach { lastSyncAuthority ->
 
+                if(lastSyncAuthority.syncAuthority == "com.android.calendar" || lastSyncAuthority.syncAuthority == "com.android.contacts" || lastSyncAuthority.syncAuthority == TaskUtils.currentProvider(application)?.authority) {
+                     lastSyncInfoString += "Authority: ${lastSyncAuthority.syncAuthority} \n ${Date(lastSyncAuthority.lastSyncTimestamp!!)}\n\n"
+                }
             }
 
+            return@map lastSyncInfoString.trim()
         }
 
 

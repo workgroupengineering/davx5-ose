@@ -11,7 +11,7 @@ import java.util.*
             ForeignKey(entity = Collection::class, parentColumns = arrayOf("id"), childColumns = arrayOf("collectionId"), onDelete = ForeignKey.CASCADE)
         ],
         indices = [
-            // index by service; no duplicate URLs per service
+            // index by collectionId and syncAuthority, one collectionId can contain 2 or more syncAuthorities
             Index("collectionId", "syncAuthority", unique = true)
         ]
 )
@@ -25,6 +25,5 @@ data class CollectionSyncInfo(
         var syncAuthority: String,
 
         var lastSyncTimestamp: Long?,
-        var lastSyncNumberOfElements: Long?
 )
 

@@ -70,15 +70,12 @@ class ContactsSyncAdapterService: SyncAdapterService() {
                     it.performSync()
                 }
 
-                //TODO: Check why stats are doubled
-                //Logger.log.info("Sync-Result for address book  #${addressBook.url}: ${syncResult.stats.numEntries} processed, ${syncResult.stats.numDeletes} deleted, ${syncResult.stats.numInserts} inserted, ${syncResult.stats.numUpdates} updated")
-
                 //Store Sync-Info for later display
                 val db = AppDatabase.getInstance(context)
                 val collection = addressBook.url?.let { url -> db.collectionDao().getByUrl(url) }
                 if (collection != null) {
                     db.collectionSyncInfoDao().insertOrReplace(
-                            CollectionSyncInfo(0, collection!!.id, authority, System.currentTimeMillis(), syncResult.stats.numDeletes + syncResult.stats.numInserts + syncResult.stats.numUpdates)
+                            CollectionSyncInfo(0, collection!!.id, authority, System.currentTimeMillis())
                     )
                 }
 

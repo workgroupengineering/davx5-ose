@@ -63,15 +63,12 @@ class CalendarsSyncAdapterService: SyncAdapterService() {
                     CalendarSyncManager(context, account, accountSettings, extras, authority, syncResult, calendar).use {
                         it.performSync()
 
-                        //TODO: Check why stats are doubled
-                        //Logger.log.info("Sync-Result for calendar #${calendar.id}, URL: ${calendar.name}: ${it.syncResult.stats.numEntries} processed, ${it.syncResult.stats.numDeletes} deleted, ${it.syncResult.stats.numInserts} inserted, ${it.syncResult.stats.numUpdates} updated")
-
                         //Store Sync-Info for later display
                         val db = AppDatabase.getInstance(context)
                         val collection = calendar.name?.let { url -> db.collectionDao().getByUrl(url) }
                         if (collection != null) {
                             db.collectionSyncInfoDao().insertOrReplace(
-                                    CollectionSyncInfo(0, collection!!.id, authority, System.currentTimeMillis(), it.syncResult.stats.numDeletes + it.syncResult.stats.numInserts + it.syncResult.stats.numUpdates)
+                                    CollectionSyncInfo(0, collection!!.id, authority, System.currentTimeMillis())
                             )
                         }
 
