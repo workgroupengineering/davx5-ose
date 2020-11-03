@@ -41,8 +41,7 @@ abstract class AppDatabase: RoomDatabase() {
                             Migration3_4,
                             Migration4_5,
                             Migration5_6,
-                            Migration6_7,
-                            Migration7_8
+                            Migration6_7
                     )
                     .fallbackToDestructiveMigration()   // as a last fallback, recreate database instead of crashing
                     .build()
@@ -77,11 +76,6 @@ abstract class AppDatabase: RoomDatabase() {
     // migrations
 
 
-    object Migration7_8: Migration(7, 8) {
-        override fun migrate(db: SupportSQLiteDatabase) {
-            // No migration necessary
-        }
-    }
 
     object Migration6_7: Migration(6, 7) {
         override fun migrate(db: SupportSQLiteDatabase) {
