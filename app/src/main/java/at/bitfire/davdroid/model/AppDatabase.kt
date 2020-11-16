@@ -42,6 +42,13 @@ abstract class AppDatabase: RoomDatabase() {
         // migrations
 
         val migrations: Array<Migration> = arrayOf(
+
+            object : Migration(8, 9) {
+                override fun migrate(db: SupportSQLiteDatabase) {
+                    //nothing to do
+                }
+            },
+
             object : Migration(7, 8) {
                 override fun migrate(db: SupportSQLiteDatabase) {
                     db.execSQL("ALTER TABLE homeset ADD COLUMN personal INTEGER NOT NULL DEFAULT 1")
