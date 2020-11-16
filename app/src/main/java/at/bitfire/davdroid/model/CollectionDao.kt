@@ -25,13 +25,16 @@ interface CollectionDao: SyncableDao<Collection> {
     @Query("SELECT * FROM collection WHERE serviceId=:serviceId AND sync ORDER BY displayName, url")
     fun getByServiceAndSync(serviceId: Long): List<Collection>
 
+    @Query("SELECT collection.* FROM collection, homeset WHERE collection.serviceId=:serviceId AND type=:type AND homeSetId=homeset.id AND homeset.personal ORDER BY collection.displayName, collection.url")
+    fun pagePersonalByServiceAndType(serviceId: Long, type: String): DataSource.Factory<Int, Collection>
+
     @Query("SELECT COUNT(*) FROM collection WHERE serviceId=:serviceId AND sync")
     fun observeHasSyncByService(serviceId: Long): LiveData<Boolean>
 
-    @Query("SELECT * FROM collection WHERE serviceId=:serviceId AND supportsVEVENT AND sync ORDER BY displayName, url")
+    @Query("SELECT * FROM collection WHERE serviceId=:serviceId AND type='${Collection.TYPE_CALENDAR}' AND supportsVEVENT AND sync ORDER BY displayName, url")
     fun getSyncCalendars(serviceId: Long): List<Collection>
 
-    @Query("SELECT * FROM collection WHERE serviceId=:serviceId AND supportsVTODO AND sync ORDER BY displayName, url")
+    @Query("SELECT * FROM collection WHERE serviceId=:serviceId AND type='${Collection.TYPE_CALENDAR}' AND supportsVTODO AND sync ORDER BY displayName, url")
     fun getSyncTaskLists(serviceId: Long): List<Collection>
 
     @Query("SELECT * FROM collection WHERE url=:url")
