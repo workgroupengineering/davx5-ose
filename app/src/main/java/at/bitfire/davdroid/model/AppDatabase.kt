@@ -45,7 +45,8 @@ abstract class AppDatabase: RoomDatabase() {
 
             object : Migration(8, 9) {
                 override fun migrate(db: SupportSQLiteDatabase) {
-                    //nothing to do
+                    db.execSQL("CREATE TABLE IF NOT EXISTS `collectionsyncinfo` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `collectionId` INTEGER NOT NULL, `syncAuthority` TEXT NOT NULL, `lastSyncTimestamp` INTEGER, FOREIGN KEY(`collectionId`) REFERENCES `collection`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
+                    db.execSQL( "CREATE UNIQUE INDEX IF NOT EXISTS `index_collectionsyncinfo_collectionId_syncAuthority` ON `collectionsyncinfo` (`collectionId`, `syncAuthority`)")
                 }
             },
 

@@ -89,7 +89,7 @@
                 android:textSize="12sp"
                 android:textIsSelectable="true"
                 android:text="@{model.lastsync}"
-                tools:text="Last Sync Date and Time"/>
+                tools:text="Authority: com.android.contacts \n Mon Nov 16 21:00:00 GMT+01:00 2020"/>
 
         </LinearLayout>
     </ScrollView>
