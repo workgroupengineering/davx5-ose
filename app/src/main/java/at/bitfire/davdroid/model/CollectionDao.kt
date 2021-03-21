@@ -40,6 +40,9 @@ interface CollectionDao: SyncableDao<Collection> {
     @Query("SELECT * FROM collection WHERE serviceId=:serviceId AND type='${Collection.TYPE_CALENDAR}' AND supportsVEVENT AND sync ORDER BY displayName, url")
     fun getSyncCalendars(serviceId: Long): List<Collection>
 
+    @Query("SELECT * FROM collection WHERE serviceId=:serviceId AND type='${Collection.TYPE_CALENDAR}' AND (supportsVTODO OR supportsVJOURNAL) AND sync ORDER BY displayName, url")
+    fun getSyncNotesx5Collections(serviceId: Long): List<Collection>
+
     @Query("SELECT * FROM collection WHERE serviceId=:serviceId AND type='${Collection.TYPE_CALENDAR}' AND supportsVTODO AND sync ORDER BY displayName, url")
     fun getSyncTaskLists(serviceId: Long): List<Collection>
 

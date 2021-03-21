@@ -46,6 +46,9 @@ class TasksWatcher(
             val db = AppDatabase.getInstance(context)
             val accountManager = AccountManager.get(context)
             for (account in accountManager.getAccountsByType(context.getString(R.string.account_type))) {
+                // FIXME
+                setSyncable(context, account, "at.bitfire.notesx5.provider", true)
+
                 val hasCalDAV = db.serviceDao().getByAccountAndType(account.name, Service.TYPE_CALDAV) != null
                 for (providerName in TaskProvider.ProviderName.values()) {
                     val isSyncable = ContentResolver.getIsSyncable(account, providerName.authority)     // may be -1 (unknown state)
