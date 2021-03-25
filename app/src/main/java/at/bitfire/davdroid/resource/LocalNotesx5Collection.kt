@@ -15,25 +15,31 @@ class LocalNotesx5Collection(account: Account, client: ContentProviderClient): N
     companion object {
 
         fun create(account: Account, client: ContentProviderClient, info: Collection) {
-            val values = valuesFromCollection(info)
+            val values = valuesFromCollection(info, account)
             client.insert(X5Collection.CONTENT_URI.asSyncAdapter(account), values)
         }
 
-        fun valuesFromCollection(info: Collection) =
+        fun valuesFromCollection(info: Collection, account: Account) =
                 ContentValues().apply {
-                    put(X5Collection.COLUMN_COLLECTION_URL, info.url.toString())
-                    put(X5Collection.COLUMN_COLLECTION_DISPLAYNAME, info.displayName ?: "letztes Segment")
-                    put(X5Collection.COLUMN_COLLECTION_DESCRIPTION, info.description)
-                    put(X5Collection.COLUMN_COLLECTION_OWNER, info.owner?.toString())
-                    put(X5Collection.COLUMN_COLLECTION_COLOR, info.color)
+                    put(X5Collection.URL, info.url.toString())
+                    put(X5Collection.DISPLAYNAME, info.displayName ?: "letztes Segment")   //TODO
+                    put(X5Collection.DESCRIPTION, info.description)
+                    put(X5Collection.OWNER, info.owner?.toString())
+                    put(X5Collection.COLOR, info.color)
+                    put(X5Collection.SUPPORTSVEVENT, info.supportsVEVENT)
+                    put(X5Collection.SUPPORTSVJOURNAL, info.supportsVJOURNAL)
+                    put(X5Collection.SUPPORTSVTODO, info.supportsVTODO)
+                    put(X5Collection.ACCOUNT_NAME, account.name) // TODO check by Ricki :-)
+                    put(X5Collection.ACCOUNT_TYPE, account.type) // TODO check by Ricki :-)
+                    put(X5Collection.SYNC_VERSION, "1")          // TODO check by Ricki :-)
+                    put(X5Collection.READONLY, info.forceReadOnly)
                 }
-
     }
 
 
     fun update(info: Collection) {
         val id = requireNotNull(id)
-        val values = valuesFromCollection(info)
+        val values = valuesFromCollection(info, account)
         client.update(ContentUris.withAppendedId(X5Collection.CONTENT_URI.asSyncAdapter(account), id), values, null, null)
     }
 
