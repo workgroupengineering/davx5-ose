@@ -53,6 +53,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:contentDescription="@string/account_read_only"
+        app:tint="@color/primaryTextColor"
         app:srcCompat="@drawable/ic_remove_circle_dark"/>
 
     <ImageView
