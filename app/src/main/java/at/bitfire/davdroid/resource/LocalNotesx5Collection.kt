@@ -4,6 +4,7 @@ import android.accounts.Account
 import android.content.ContentProviderClient
 import android.content.ContentUris
 import android.content.ContentValues
+import at.bitfire.davdroid.DavUtils
 import at.bitfire.davdroid.model.Collection
 import at.bitfire.ical4android.Notesx5Collection
 import at.bitfire.ical4android.Notesx5CollectionFactory
@@ -22,16 +23,15 @@ class LocalNotesx5Collection(account: Account, client: ContentProviderClient): N
         fun valuesFromCollection(info: Collection, account: Account) =
                 ContentValues().apply {
                     put(X5Collection.URL, info.url.toString())
-                    put(X5Collection.DISPLAYNAME, info.displayName ?: "letztes Segment")   //TODO
+                    put(X5Collection.DISPLAYNAME, info.displayName ?: DavUtils.lastSegmentOfUrl(info.url))
                     put(X5Collection.DESCRIPTION, info.description)
                     put(X5Collection.OWNER, info.owner?.toString())
                     put(X5Collection.COLOR, info.color)
                     put(X5Collection.SUPPORTSVEVENT, info.supportsVEVENT)
                     put(X5Collection.SUPPORTSVJOURNAL, info.supportsVJOURNAL)
                     put(X5Collection.SUPPORTSVTODO, info.supportsVTODO)
-                    put(X5Collection.ACCOUNT_NAME, account.name) // TODO check by Ricki :-)
-                    put(X5Collection.ACCOUNT_TYPE, account.type) // TODO check by Ricki :-)
-                    put(X5Collection.SYNC_VERSION, "1")          // TODO check by Ricki :-)
+                    put(X5Collection.ACCOUNT_NAME, account.name)
+                    put(X5Collection.ACCOUNT_TYPE, account.type)
                     put(X5Collection.READONLY, info.forceReadOnly)
                 }
     }
