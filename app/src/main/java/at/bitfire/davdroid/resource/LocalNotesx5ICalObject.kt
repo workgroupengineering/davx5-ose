@@ -9,17 +9,22 @@ import at.bitfire.davdroid.model.Collection
 import at.bitfire.ical4android.Notesx5Collection
 import at.bitfire.ical4android.Notesx5CollectionFactory
 import at.bitfire.ical4android.Notesx5ICalObject
+import at.bitfire.ical4android.Notesx5ICalObjectFactory
+import at.bitfire.notesx5.NotesX5Contract
 import at.bitfire.notesx5.NotesX5Contract.X5Collection
 import at.bitfire.notesx5.NotesX5Contract.asSyncAdapter
 
-class LocalNotesx5Collection(account: Account, client: ContentProviderClient, id: Long): Notesx5Collection<Notesx5ICalObject>(account, client, LocalNotesx5ICalObject.Factory, id) {
+class LocalNotesx5ICalObject(account: Account, client: ContentProviderClient, id: Long, component: NotesX5Contract.X5ICalObject.Component): Notesx5ICalObject(account, client, id, component) {
 
     companion object {
 
+        /*
         fun create(account: Account, client: ContentProviderClient, info: Collection) {
             val values = valuesFromCollection(info, account)
             create(account, client, values)
         }
+
+
 
         fun valuesFromCollection(info: Collection, account: Account) =
                 ContentValues().apply {
@@ -35,9 +40,11 @@ class LocalNotesx5Collection(account: Account, client: ContentProviderClient, id
                     put(X5Collection.ACCOUNT_TYPE, account.type)
                     put(X5Collection.READONLY, info.forceReadOnly)
                 }
+
+         */
     }
 
-
+/*
     fun update(info: Collection) {
         val id = requireNotNull(id)
         val values = valuesFromCollection(info, account)
@@ -45,8 +52,14 @@ class LocalNotesx5Collection(account: Account, client: ContentProviderClient, id
     }
 
 
-    object Factory: Notesx5CollectionFactory<LocalNotesx5Collection> {
-        override fun newInstance(account: Account, client: ContentProviderClient, id: Long) = LocalNotesx5Collection(account, client, id)
+ */
+
+    object Factory: Notesx5ICalObjectFactory<LocalNotesx5ICalObject> {
+       // override fun newInstance(account: Account, client: ContentProviderClient, id: Long) = LocalNotesx5ICalObject(account, client, id)
+
+        override fun fromProvider(iCalObject: Notesx5Collection<Notesx5ICalObject>, values: ContentValues): LocalNotesx5ICalObject {
+            TODO("Not yet implemented")
+        }
     }
 
 }
