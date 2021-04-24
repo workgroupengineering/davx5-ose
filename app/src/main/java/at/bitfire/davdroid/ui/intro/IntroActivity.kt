@@ -3,10 +3,12 @@ package at.bitfire.davdroid.ui.intro
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import at.bitfire.davdroid.R
 import at.bitfire.davdroid.log.Logger
+import at.bitfire.davdroid.settings.Settings
 import at.bitfire.davdroid.settings.SettingsManager
 import at.bitfire.davdroid.ui.intro.IIntroFragmentFactory.ShowMode
 import com.github.appintro.AppIntro2
@@ -41,6 +43,14 @@ class IntroActivity: AppIntro2() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val settings = SettingsManager.getInstance(this)
+
+        // show day, night or system setting theme according to preferences
+        when (settings.getString(Settings.PREFERRED_THEME)) {
+            Settings.PREFERRED_THEME_DAY -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            Settings.PREFERRED_THEME_NIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            Settings.PREFERRED_THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
 
         val factoriesWithMode = introFragmentFactories.associateWith { it.shouldBeShown(this, settings) }
         val showAll = factoriesWithMode.values.any { it == ShowMode.SHOW }

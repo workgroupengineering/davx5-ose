@@ -181,6 +181,19 @@
     <string name="app_settings_tasks_provider">Tasks app</string>
     <string name="app_settings_tasks_provider_synchronizing_with">Synchronizing with %s</string>
     <string name="app_settings_tasks_provider_none">No compatible tasks app found</string>
+    <string-array name="app_settings_theme">
+        <item>System default</item>
+        <item>Day</item>
+        <item>Night</item>
+    </string-array>
+    <string-array name="app_settings_theme_technical">     <!-- technical values, do not translate -->
+        <item>SYSTEM</item>
+        <item>DAY</item>
+        <item>NIGHT</item>
+    </string-array>
+    <string name="app_settings_theme_title">Select theme</string>
+    <string name="app_settings_theme_summary">Use the day or night theme or keep the system default. Current setting: %s</string>
+
 
     <!-- AccountActivity -->
     <string name="account_carddav">CardDAV</string>

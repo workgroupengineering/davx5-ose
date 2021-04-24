@@ -6,6 +6,14 @@ object Settings {
 
     const val DISTRUST_SYSTEM_CERTIFICATES = "distrust_system_certs"
 
+    // THEME
+    const val PREFERRED_THEME = "preferred_theme"
+    // THEME Options, must be kept consistent with @string\app_settings_theme_technical
+    const val PREFERRED_THEME_DAY = "DAY"
+    const val PREFERRED_THEME_NIGHT = "NIGHT"
+    const val PREFERRED_THEME_SYSTEM = "SYSTEM"
+
+
     const val OVERRIDE_PROXY = "override_proxy"
     const val OVERRIDE_PROXY_HOST = "override_proxy_host"
     const val OVERRIDE_PROXY_PORT = "override_proxy_port"

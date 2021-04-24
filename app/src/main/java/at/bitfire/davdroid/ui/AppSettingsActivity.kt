@@ -14,10 +14,8 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.EditTextPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.*
 import at.bitfire.cert4android.CustomCertManager
 import at.bitfire.davdroid.BuildConfig
 import at.bitfire.davdroid.ForegroundService
@@ -166,6 +164,25 @@ class AppSettingsActivity: AppCompatActivity() {
             // security settings
             findPreference<SwitchPreferenceCompat>(Settings.DISTRUST_SYSTEM_CERTIFICATES)!!
                     .isChecked = settings.getBoolean(Settings.DISTRUST_SYSTEM_CERTIFICATES)
+
+
+            // theme settings
+            findPreference<DropDownPreference>(Settings.PREFERRED_THEME)!!.apply {
+                value = settings.getString(Settings.PREFERRED_THEME)
+
+                when (value) {
+                    Settings.PREFERRED_THEME_DAY -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    Settings.PREFERRED_THEME_NIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    Settings.PREFERRED_THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                    else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+
+                onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+                    settings.putString(Settings.PREFERRED_THEME, newValue as String)
+                    false
+                }
+
+            }
 
             // integration settings
             findPreference<Preference>(Settings.PREFERRED_TASKS_PROVIDER)!!.apply {
