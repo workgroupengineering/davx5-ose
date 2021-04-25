@@ -14,48 +14,58 @@
         android:background="@color/primaryDarkColor">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/logo"
+            android:id="@+id/logoBackground"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/yourDataYourChoice"
+            app:srcCompat="@drawable/intro_logo_background" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/logoBackground"
+            app:layout_constraintBottom_toBottomOf="@id/logoBackground"
+            app:layout_constraintStart_toStartOf="@id/logoBackground"
+            app:layout_constraintEnd_toEndOf="@id/logoBackground"
+            android:scaleX="1.8"
+            android:scaleY="1.8"
             app:srcCompat="@drawable/ic_launcher_foreground" />
-
 
         <TextView
             android:id="@+id/yourDataYourChoice"
-            style="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginVertical="12dp"
-            android:gravity="bottom|center_horizontal"
-            android:paddingEnd="24dp"
-            android:text="@string/intro_slogan1"
-            android:textColor="@android:color/white"
-            app:autoSizeMaxTextSize="34sp"
-            app:autoSizeTextType="uniform"
+            app:layout_constraintTop_toTopOf="@id/logoBackground"
             app:layout_constraintBottom_toTopOf="@id/takeControl"
+            app:layout_constraintStart_toEndOf="@id/logoBackground"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/logo"
-            app:layout_constraintTop_toTopOf="@id/logo" />
+            android:layout_marginVertical="12dp"
+            android:gravity="center"
+            android:paddingEnd="24dp"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMaxTextSize="34sp"
+            android:textColor="@android:color/white"
+            android:text="@string/intro_slogan1"/>
 
         <TextView
             android:id="@+id/takeControl"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:gravity="center_horizontal|top"
-            android:paddingEnd="24dp"
-            android:text="@string/intro_slogan2"
-            android:textColor="@android:color/white"
-            app:autoSizeMaxTextSize="48sp"
-            app:autoSizeTextType="uniform"
-            app:layout_constraintBottom_toBottomOf="@id/logo"
+            app:layout_constraintTop_toBottomOf="@id/yourDataYourChoice"
+            app:layout_constraintBottom_toBottomOf="@id/logoBackground"
+            app:layout_constraintStart_toEndOf="@id/logoBackground"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/logo"
-            app:layout_constraintTop_toBottomOf="@id/yourDataYourChoice" />
+            android:gravity="center"
+            android:paddingEnd="24dp"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMaxTextSize="48sp"
+            android:textColor="@android:color/white"
+            android:text="@string/intro_slogan2"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

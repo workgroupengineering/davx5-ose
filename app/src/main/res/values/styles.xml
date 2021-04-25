@@ -36,7 +36,7 @@
 
     <!-- app theme -->
 
-    <style name="AppTheme.Base" parent="Theme.MaterialComponents.Light"/>
+    <style name="AppTheme.Base" parent="Theme.MaterialComponents.DayNight"/>
     <style name="AppTheme" parent="AppTheme.Base">
         <!-- see https://github.com/material-components/material-components-android/blob/master/docs/theming/Color.md for component color names -->
         <item name="colorPrimary">@color/primaryColor</item>
@@ -45,14 +45,19 @@
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
 
         <item name="colorSecondary">@color/secondaryColor</item>
+
         <item name="colorSecondaryVariant">@color/secondaryLightColor</item>
+        <!-- No need to define this color explicitely
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        -->
 
         <item name="colorError">@color/errorColor</item>
-        <item name="colorOnError">@color/colorOnError</item>
 
+        <!-- No need to define this color explicitely
+        <item name="colorOnError">@color/colorOnError</item>
         <item name="android:colorBackground">@color/backgroundColor</item>
         <item name="colorSurface">@color/colorSurface</item>
+        -->
     </style>
 
     <style name="AppTheme.NoActionBar">

@@ -19,10 +19,16 @@ class WelcomeFragment: Fragment() {
         val  v = inflater.inflate(R.layout.intro_welcome, container, false)
 
         val logo: ImageView = v.findViewById(R.id.logo)
+        val logoBackground: ImageView = v.findViewById(R.id.logoBackground)
         val yourdata: TextView = v.findViewById(R.id.yourDataYourChoice)
         val takecontrol: TextView = v.findViewById(R.id.takeControl)
 
         logo.apply {
+            animation = AnimationUtils.loadAnimation(this.context, R.anim.fadein)
+            animation.startOffset = 0
+            animation.start()
+        }
+        logoBackground.apply {
             animation = AnimationUtils.loadAnimation(this.context, R.anim.fadein)
             animation.startOffset = 0
             animation.start()
