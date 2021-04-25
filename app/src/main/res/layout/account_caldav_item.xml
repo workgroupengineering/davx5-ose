@@ -68,7 +68,6 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:contentDescription="@string/account_read_only"
-            app:tint="@color/primaryTextColor"
             app:srcCompat="@drawable/ic_remove_circle_dark" />
 
         <ImageView
@@ -76,7 +75,6 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:contentDescription="@string/account_calendar"
-            app:tint="@color/primaryTextColor"
             app:srcCompat="@drawable/ic_today_dark"/>
 
         <ImageView
@@ -84,7 +82,6 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:contentDescription="@string/account_task_list"
-            app:tint="@color/primaryTextColor"
             app:srcCompat="@drawable/ic_playlist_add_check_dark"/>
 
         <ImageView

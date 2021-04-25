@@ -109,6 +109,7 @@
 
         <DropDownPreference
             android:key="preferred_theme"
+            android:icon="@drawable/ic_theme"
             android:title="@string/app_settings_theme_title"
             android:summary="@string/app_settings_theme_summary"
             android:entries="@array/app_settings_theme"
