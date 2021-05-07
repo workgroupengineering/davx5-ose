@@ -5,44 +5,35 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import at.bitfire.davdroid.R
 import at.bitfire.davdroid.settings.SettingsManager
-import kotlinx.android.synthetic.main.intro_welcome.*
+import kotlinx.android.synthetic.main.intro_welcome.view.*
 
 
 class WelcomeFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val  v = inflater.inflate(R.layout.intro_welcome, container, false)
+        val v = inflater.inflate(R.layout.intro_welcome, container, false)
 
-        // TODO animate
-        /*val logo: ImageView = v.findViewById(R.id.logo)
-        val logoBackground: ImageView = v.findViewById(R.id.logoBackground)
-        val yourdata: TextView = v.findViewById(R.id.yourDataYourChoice)
-        val takecontrol: TextView = v.findViewById(R.id.takeControl)*/
-
-        /*logo.apply {
-            animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.fadein)
-            animation.startOffset = 0
-            animation.start()
+        v.logo.apply {
+            alpha = 0f
+            animate()
+                .alpha(1f)
+                .setDuration(300)
         }
-        logoBackground?.apply {
-            animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.fadein)
-            animation.startOffset = 0
-            animation.start()
+        v.yourDataYourChoice.apply {
+            translationX = -1000f
+            animate()
+                .translationX(0f)
+                .setDuration(300)
         }
-        yourDataYourChoice.apply {
-            animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.fadein)
-            animation.startOffset = 1000
-            animation.start()
+        v.takeControl.apply {
+            translationX = 1000f
+            animate()
+                .translationX(0f)
+                .setDuration(300)
         }
-        takeControl.apply {
-            animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.fadein)
-            animation.startOffset = 2000
-            animation.start()
-        }*/
 
         return v
     }

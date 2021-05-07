@@ -60,9 +60,6 @@ class AppSettingsActivity: AppCompatActivity() {
 
         override fun onCreatePreferences(bundle: Bundle?, s: String?) {
             addPreferencesFromResource(R.xml.settings_app)
-            loadSettings()
-
-            settings.addOnChangeListener(this)
 
             // UI settings
             findPreference<Preference>("notification_settings")!!.apply {
@@ -94,8 +91,14 @@ class AppSettingsActivity: AppCompatActivity() {
             }
         }
 
-        override fun onDestroy() {
-            super.onDestroy()
+        override fun onStart() {
+            super.onStart()
+            settings.addOnChangeListener(this)
+            loadSettings()
+        }
+
+        override fun onStop() {
+            super.onStop()
             settings.removeOnChangeListener(this)
         }
 
@@ -106,7 +109,7 @@ class AppSettingsActivity: AppCompatActivity() {
                 isChecked = settings.getBooleanOrNull(Settings.FOREGROUND_SERVICE) == true
                 onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
                     settings.putBoolean(Settings.FOREGROUND_SERVICE, newValue as Boolean)
-                    context.startService(Intent(ForegroundService.ACTION_FOREGROUND, null, context, ForegroundService::class.java))
+                    requireActivity().startService(Intent(ForegroundService.ACTION_FOREGROUND, null, requireActivity(), ForegroundService::class.java))
                     false
                 }
             }
@@ -169,6 +172,7 @@ class AppSettingsActivity: AppCompatActivity() {
             findPreference<DropDownPreference>(Settings.PREFERRED_THEME)!!.apply {
                 val mode = settings.getIntOrNull(Settings.PREFERRED_THEME) ?: Settings.PREFERRED_THEME_DEFAULT
                 setValueIndex(entryValues.indexOf(mode.toString()))
+                summary = getString(R.string.app_settings_theme_summary, entry)
 
                 onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
                     val newMode = (newValue as String).toInt()
@@ -180,8 +184,8 @@ class AppSettingsActivity: AppCompatActivity() {
 
             // integration settings
             findPreference<Preference>(Settings.PREFERRED_TASKS_PROVIDER)!!.apply {
-                val pm = context.packageManager
-                val taskProvider = TaskUtils.currentProvider(context)
+                val pm = requireActivity().packageManager
+                val taskProvider = TaskUtils.currentProvider(requireActivity())
                 if (taskProvider != null) {
                     val tasksAppInfo = pm.getApplicationInfo(taskProvider.packageName, 0)
                     val inset = (24*resources.displayMetrics.density).roundToInt()  // 24dp
@@ -204,7 +208,8 @@ class AppSettingsActivity: AppCompatActivity() {
         override fun onSettingsChanged() {
             // loadSettings must run in UI thread
             CoroutineScope(Dispatchers.Main).launch {
-                loadSettings()
+                if (isAdded)
+                    loadSettings()
             }
         }
 
