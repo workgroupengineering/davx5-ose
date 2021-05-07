@@ -25,7 +25,6 @@
             app:layout_constraintVertical_weight="2"
             app:srcCompat="@drawable/ic_launcher_foreground" />
 
-
         <TextView
             android:id="@+id/yourDataYourChoice"
             android:layout_width="match_parent"

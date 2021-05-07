@@ -165,23 +165,17 @@ class AppSettingsActivity: AppCompatActivity() {
             findPreference<SwitchPreferenceCompat>(Settings.DISTRUST_SYSTEM_CERTIFICATES)!!
                     .isChecked = settings.getBoolean(Settings.DISTRUST_SYSTEM_CERTIFICATES)
 
-
-            // theme settings
+            // user interface settings
             findPreference<DropDownPreference>(Settings.PREFERRED_THEME)!!.apply {
-                value = settings.getString(Settings.PREFERRED_THEME)
-
-                when (value) {
-                    Settings.PREFERRED_THEME_DAY -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    Settings.PREFERRED_THEME_NIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    Settings.PREFERRED_THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                    else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                }
+                val mode = settings.getIntOrNull(Settings.PREFERRED_THEME) ?: Settings.PREFERRED_THEME_DEFAULT
+                setValueIndex(entryValues.indexOf(mode.toString()))
 
                 onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-                    settings.putString(Settings.PREFERRED_THEME, newValue as String)
+                    val newMode = (newValue as String).toInt()
+                    AppCompatDelegate.setDefaultNightMode(newMode)
+                    settings.putInt(Settings.PREFERRED_THEME, newMode)
                     false
                 }
-
             }
 
             // integration settings
@@ -197,7 +191,7 @@ class AppSettingsActivity: AppCompatActivity() {
                     )
                     summary = getString(R.string.app_settings_tasks_provider_synchronizing_with, tasksAppInfo.loadLabel(pm))
                 } else {
-                    setIcon(R.drawable.ic_playlist_add_check_dark)
+                    setIcon(R.drawable.ic_playlist_add_check)
                     setSummary(R.string.app_settings_tasks_provider_none)
                 }
                 setOnPreferenceClickListener {

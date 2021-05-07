@@ -44,14 +44,6 @@ class IntroActivity: AppIntro2() {
         super.onCreate(savedInstanceState)
         val settings = SettingsManager.getInstance(this)
 
-        // show day, night or system setting theme according to preferences
-        when (settings.getString(Settings.PREFERRED_THEME)) {
-            Settings.PREFERRED_THEME_DAY -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            Settings.PREFERRED_THEME_NIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            Settings.PREFERRED_THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        }
-
         val factoriesWithMode = introFragmentFactories.associateWith { it.shouldBeShown(this, settings) }
         val showAll = factoriesWithMode.values.any { it == ShowMode.SHOW }
         for ((factory, mode) in factoriesWithMode)
